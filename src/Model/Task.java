@@ -3,8 +3,19 @@ package Model;
 public class Task {
     private int id;
     private String title;
-    private String Description;
+    private String description;
     private String status;
+
+    public Task(String title, String description, String status) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+    }
+
+    public Task(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 
     public int getId() {
         return id;
@@ -18,16 +29,16 @@ public class Task {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTittle(String title) {
         this.title = title;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getStatus() {
@@ -42,8 +53,8 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "id=" + id +
-                ", title='" + title + '\'' +
-                ", Description='" + Description + '\'' +
+                ", tittle='" + title + '\'' +
+                ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }
