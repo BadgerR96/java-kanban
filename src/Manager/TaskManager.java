@@ -1,36 +1,16 @@
 package Manager;
 
-import Model.Epic;
-import Model.Status;
-import Model.Subtask;
-import Model.Task;
+import Model.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TaskManager {
     private int nexId = 1;
 
-    Map<Integer, Task> mapOfTask = new HashMap<>();
-    Map<Integer, Epic> mapOfEpic = new HashMap<>();
-    Map<Integer, Subtask> mapOfSubtask = new HashMap<>();
+    private Map<Integer, Task> mapOfTask = new HashMap<>();
+    private Map<Integer, Epic> mapOfEpic = new HashMap<>();
+    private Map<Integer, Subtask> mapOfSubtask = new HashMap<>();
 
-
-    public Subtask generateSubtask(String title, String description, String status, int epicId) {
-        Subtask subtask = new Subtask(title, description, status, epicId);
-        subtask.setId(nexId++);
-        return subtask;
-    }
-    public Epic generateEpic(String title, String description, String status) {
-        Epic epic = new Epic(title, description, status);
-        epic.setId(nexId++);
-        return epic;
-    }
-    public Task generateTask(String title, String description, String status) {
-        Task task = new Task(title, description, status);
-        task.setId(nexId++);
-        return task;
-    }
     public void addTask(Task task) {
         task.setId(nexId++);
         mapOfTask.put(task.getId(), task);
@@ -68,13 +48,13 @@ public class TaskManager {
 
 
     public void updateEpicStatus(Epic epic) {
-        Set<String> setOfStatus = new HashSet<>();
+        Set<Status> setOfStatus = new HashSet<>();
         for (int subtaskId : epic.getSubtaskIds()) {
             Subtask subtask = mapOfSubtask.get(subtaskId);
-            String status = subtask.getStatus();
+            Status status = subtask.getStatus();
             setOfStatus.add(status);
         }
-        if(setOfStatus.isEmpty()){
+        if (setOfStatus.isEmpty()) {
             epic.setStatus(Status.NEW);
             return;
         }
@@ -90,11 +70,14 @@ public class TaskManager {
     }
 
     public List<Epic> getAllEpic() {
-        return mapOfEpic.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(mapOfEpic.values());
     }
 
     public List<Subtask> getAllSubtask() {
-        return mapOfSubtask.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(mapOfSubtask.values());
+    }
+    public List<Task> getAllTask() {
+        return new ArrayList<>(mapOfTask.values());
     }
 
     public List<Subtask> getSubtaskByEpic(Epic epic) {
@@ -112,10 +95,18 @@ public class TaskManager {
 
     public void deleteAllEpic() {
         mapOfEpic.clear();
+        mapOfSubtask.clear();
     }
 
     public void deleteAllSubtask() {
         mapOfSubtask.clear();
+        List<Epic> epics = new ArrayList<>();
+        for (int epicId : mapOfEpic.keySet()){
+            Epic epic = mapOfEpic.get(epicId);
+            epic.getSubtaskIds().clear();
+            updateEpicStatus(epic);
+            mapOfEpic.put(epicId, epic);
+        }
     }
 
     public void deleteTaskById(Integer id) {
