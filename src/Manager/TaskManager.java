@@ -100,12 +100,10 @@ public class TaskManager {
 
     public void deleteAllSubtask() {
         mapOfSubtask.clear();
-        List<Epic> epics = new ArrayList<>();
-        for (int epicId : mapOfEpic.keySet()){
-            Epic epic = mapOfEpic.get(epicId);
-            epic.getSubtaskIds().clear();
-            updateEpicStatus(epic);
-            mapOfEpic.put(epicId, epic);
+        for (Epic e : mapOfEpic.values()){
+            e.getSubtaskIds().clear();
+            updateEpicStatus(e);
+            mapOfEpic.put(e.getId(), e);
         }
     }
 

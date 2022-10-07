@@ -19,6 +19,7 @@ public class Main {
         taskManager.addEpic(epic1);
         Subtask subtask2 = new Subtask("Поздадача 1 Э2", "Описание П1 Э2", Status.NEW,2);
         taskManager.addSubtask(subtask2, epic1.getId());
+        taskManager.deleteAllSubtask();
 
 
         List<Epic> listOfEpic = taskManager.getAllEpic();
