@@ -1,122 +1,45 @@
 package Manager;
 
-import Model.*;
+import Model.Epic;
+import Model.Subtask;
+import Model.Task;
 
-import java.util.*;
+import java.util.List;
 
-public class TaskManager {
-    private int nexId = 1;
+public interface TaskManager {
+    void addTask(Task task);
 
-    private Map<Integer, Task> mapOfTask = new HashMap<>();
-    private Map<Integer, Epic> mapOfEpic = new HashMap<>();
-    private Map<Integer, Subtask> mapOfSubtask = new HashMap<>();
+    void addEpic(Epic epic);
 
-    public void addTask(Task task) {
-        task.setId(nexId++);
-        mapOfTask.put(task.getId(), task);
-    }
+    public void addSubtask(Subtask subtask, int epicId);
 
-    public void addEpic(Epic epic) {
-        epic.setId(nexId++);
-        updateEpicStatus(epic);
-        mapOfEpic.put(epic.getId(), epic);
+    void updateTask(Task task);
 
-    }
+    void updateSubtask(Subtask subtask);
 
-    public void addSubtask(Subtask subtask, int epicId) {
-        subtask.setId(nexId++);
-        mapOfSubtask.put(subtask.getId(), subtask);
-        Epic epic = mapOfEpic.get(epicId);
-        epic.addSubId(subtask.getId());
-        updateEpicStatus(epic);
-        mapOfEpic.put(epic.getId(), epic);
-    }
+    void updateEpic(Epic epic);
 
-    public void updateTask(Task task) {
-        mapOfTask.put(task.getId(), task);
-    }
+    List<Epic> getAllEpic();
 
-    public void updateSubtask(Subtask subtask) {
-        updateEpicStatus(mapOfEpic.get(subtask.getEpicId()));
-        mapOfSubtask.put(subtask.getId(), subtask);
-    }
+    List<Subtask> getAllSubtask();
 
-    public void updateEpic(Epic epic) {
-        updateEpicStatus(epic);
-        mapOfEpic.put(epic.getId(), epic);
-    }
+    List<Task> getAllTask();
 
+    List<Subtask> getSubtaskByEpic(Epic epic);
 
-    public void updateEpicStatus(Epic epic) {
-        Set<Status> setOfStatus = new HashSet<>();
-        for (int subtaskId : epic.getSubtaskIds()) {
-            Subtask subtask = mapOfSubtask.get(subtaskId);
-            Status status = subtask.getStatus();
-            setOfStatus.add(status);
-        }
-        if (setOfStatus.isEmpty()) {
-            epic.setStatus(Status.NEW);
-            return;
-        }
-        if (setOfStatus.contains(Status.NEW) && setOfStatus.size() <= 1) {
-            epic.setStatus(Status.NEW);
-            return;
-        }
-        if (setOfStatus.contains(Status.DONE) && setOfStatus.size() <= 1) {
-            epic.setStatus(Status.DONE);
-            return;
-        }
-        epic.setStatus(Status.IN_PROGRES);
-    }
+    void deleteAllTask();
 
-    public List<Epic> getAllEpic() {
-        return new ArrayList<>(mapOfEpic.values());
-    }
+    void deleteAllEpic();
 
-    public List<Subtask> getAllSubtask() {
-        return new ArrayList<>(mapOfSubtask.values());
-    }
-    public List<Task> getAllTask() {
-        return new ArrayList<>(mapOfTask.values());
-    }
+    void deleteAllSubtask();
 
-    public List<Subtask> getSubtaskByEpic(Epic epic) {
-        List<Subtask> listSubtask = new ArrayList<>();
-        for (int subtaskId : epic.getSubtaskIds()) {
-            Subtask subtask = mapOfSubtask.get(subtaskId);
-            listSubtask.add(subtask);
-        }
-        return listSubtask;
-    }
+    public void deleteTaskById(Integer id);
 
-    public void deleteAllTask() {
-        mapOfTask.clear();
-    }
+    public void deleteEpicById(Integer id);
 
-    public void deleteAllEpic() {
-        mapOfEpic.clear();
-        mapOfSubtask.clear();
-    }
+    public void deleteSubtaskById(Integer id);
+    Task getTask(Integer id);
+    Epic getEpic(Integer id);
+    Subtask getSubtask(Integer id);
 
-    public void deleteAllSubtask() {
-        mapOfSubtask.clear();
-        for (Epic e : mapOfEpic.values()){
-            e.getSubtaskIds().clear();
-            updateEpicStatus(e);
-            mapOfEpic.put(e.getId(), e);
-        }
-    }
-
-    public void deleteTaskById(Integer id) {
-        mapOfTask.remove(id);
-    }
-
-    public void deleteEpicById(Integer id) {
-        mapOfEpic.remove(id);
-    }
-
-    public void deleteSubtaskById(Integer id) {
-        mapOfSubtask.remove(id);
-    }
 }
-
