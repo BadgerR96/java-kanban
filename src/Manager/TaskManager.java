@@ -41,5 +41,6 @@ public interface TaskManager {
     Task getTask(Integer id);
     Epic getEpic(Integer id);
     Subtask getSubtask(Integer id);
+    List<Task> getHistory();
 
 }

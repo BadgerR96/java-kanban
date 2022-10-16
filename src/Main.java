@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args){
         Managers managers = new Managers();
         TaskManager taskManager = managers.getDefault();
-        HistoryManager historyManager = Managers.getDefaultHistory();
+
         Epic epic = new Epic("Задача 1", "Описание задачи 1", Status.NEW);
         taskManager.addEpic(epic);
         Subtask subtask = new Subtask("Поздадача 1 Э1", "Описание П1 Э1", Status.NEW,1);
@@ -39,7 +39,7 @@ public class Main {
         taskManager.getSubtask(3);
 
 
-        historyManager.getHistory().stream().forEach(System.out::println);
+        taskManager.getHistory().stream().forEach(System.out::println);
 
 
         List<Epic> listOfEpic = taskManager.getAllEpic();
