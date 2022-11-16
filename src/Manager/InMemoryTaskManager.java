@@ -78,6 +78,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setStatus(Status.IN_PROGRES);
     }
 
+
     @Override
     public Task getTask(Integer id) {
         Task task = mapOfTask.get(id);
@@ -132,12 +133,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllTask() {
         mapOfTask.clear();
+        //Добавить удаление из истории
     }
 
     @Override
     public void deleteAllEpic() {
         mapOfEpic.clear();
         mapOfSubtask.clear();
+        //Добавить удаление из истории
     }
 
     @Override
@@ -147,22 +150,26 @@ public class InMemoryTaskManager implements TaskManager {
             e.getSubtaskIds().clear();
             updateEpicStatus(e);
             mapOfEpic.put(e.getId(), e);
+            historyManager.remove(e.getId());
         }
     }
 
     @Override
     public void deleteTaskById(Integer id) {
         mapOfTask.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
     public void deleteEpicById(Integer id) {
         mapOfEpic.remove(id);
+        historyManager.remove(id);
     }
 
     @Override
     public void deleteSubtaskById(Integer id) {
         mapOfSubtask.remove(id);
+        historyManager.remove(id);
     }
 
 }
